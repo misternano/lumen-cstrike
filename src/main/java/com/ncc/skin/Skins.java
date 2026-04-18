@@ -1,0 +1,13 @@
+package com.ncc.skin;
+
+import net.minestom.server.entity.PlayerSkin;
+
+public class Skins {
+
+    public static final PlayerSkin DEFAULT = new PlayerSkin(
+            "ewogICJ0aW1lc3RhbXAiIDogMTc2NDcxOTIxNDE4MiwKICAicHJvZmlsZUlkIiA6ICI2NGRiNmMwNTliOTk0OTM2YTY0M2QwODEwODE0ZmJkMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGVTaWx2ZXJEcmVhbXMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2M2NzI0ZGU0NjczYzM0MTJmNjY5NTFkZDZjMTYyYTAwYWJhYmY4MDg3ZWE5NTgxYjRmNzdiZmRiMDU5ZmRlNSIKICAgIH0KICB9Cn0=",
+            "acVbcXztDPjrAIOKSwT/U8PB3Oc8zOzdh25+2upQLxnIQXXmcf9b13RSR8tYZQRxhmB6ddn9an4gqFdS1fKWgAtDa/8KZhVV7WGGNfvQE9s/Mf3EOdLd3aZKigUbGv0NONMbWbd6fP7B7PkW+vGVnq/0vVF7zNHmvRfD8WNAbPUW1jenDO1LOjDUYdnmypk2UQpBoek3vpZcIksD1wYyjGjxTB69QuLkSDNEC//U/h3XLCd3DzEuxu2XOQ89/HCcL0/fIeiS3GUfHtXIyzV20gOF+Fd2kz3Bz91r4gDax1ZTVPrMxNg/7Sp17/bGIEaRrJxwz/6wC9ghCXWnsNMYpt4bTuKqew4Qd0ZqhuzhteZkAt7Ea4PqKMTWHrjLmJrii1xk+HgO27ShQdOG7a+h09TTIkqdOECagg4idGApR1eZANIqtIEVGccyeK0q9VFvFx4jmsNkEGqW43PYIQwjdR3Hzm8XxPwOjE1bV0h/IIKjUh/Cdtz/rDRjPoAANisxSgq3G8F1ih+wSr4b/vzJf/GynPIYyUWmK0WijklJ8kydSwNY73nGOsWQaW5mk2YrKi9H8qP5tFF9MmSqT/M/F9NCQMj3t3jsrhOj7qo+MYVyBifTlaUEafzLBt9n3MNzBOxTuokydwfxc4R4V+a4V0OW/iFEOr4hQ0WR6YdJzTA="
+    );
+
+    private Skins() {}
+}

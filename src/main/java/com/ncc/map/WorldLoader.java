@@ -1,21 +1,24 @@
 package com.ncc.map;
 
 import net.hollowcube.polar.PolarLoader;
-import net.hollowcube.polar.PolarWorld;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.InstanceContainer;
 
 import java.io.File;
 
 public class WorldLoader {
 
-    public static void paste(File file, InstanceContainer instance) {
+    public static InstanceContainer load(File file) {
         try {
 
-            PolarWorld world = PolarLoader.load()
+            InstanceContainer instance = MinecraftServer.getInstanceManager().createInstanceContainer();
+
+            instance.setChunkLoader(new PolarLoader(file.toPath()));
+
+            return instance;
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch schematics: " + file.getName(), e);
+            throw new RuntimeException("Failed to load polar world: " + file.getName(), e);
         }
     }
 }
-

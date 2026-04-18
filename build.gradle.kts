@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("net.minestom:minestom:2026.04.13-1.21.11")
     implementation("dev.hollowcube:polar:1.15.1")
+    implementation("it.unimi.dsi:fastutil:8.5.18")
 }
 
 java {
