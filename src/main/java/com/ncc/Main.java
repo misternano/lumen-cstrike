@@ -1,5 +1,7 @@
 package com.ncc;
 
+import com.ncc.commands.MapCommand;
+import com.ncc.game.GameManager;
 import com.ncc.map.GameMapConfig;
 import com.ncc.map.MapConfigLoader;
 import com.ncc.map.MapLoader;
@@ -8,7 +10,6 @@ import com.ncc.skin.Skins;
 import net.hollowcube.polar.PolarLoader;
 import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
@@ -23,11 +24,12 @@ import java.util.Random;
 
 public class Main {
 
-    private static InstanceContainer INSTANCE;
-    private static GameMapConfig CFG;
+    public static InstanceContainer INSTANCE;
+    public static GameMapConfig CFG;
+    public static GameManager gameManager;
     private static Team HIDDEN_TEAM;
 
-    private static final int MAX_PLAYERS = 10;
+    public static final int MAX_PLAYERS = 10;
     private static final Random RANDOM = new Random();
 
     public static void main(String[] args) {
@@ -67,6 +69,11 @@ public class Main {
         HIDDEN_TEAM = MinecraftServer.getTeamManager().createTeam("hidden");
         HIDDEN_TEAM.setNameTagVisibility(TeamsPacket.NameTagVisibility.NEVER);
 
+        GameManager gameManager = new GameManager(CFG);
+        Main.gameManager = gameManager;
+
+        MinecraftServer.getCommandManager().register(new MapCommand());
+
         GlobalEventHandler events = MinecraftServer.getGlobalEventHandler();
 
         events.addListener(AsyncPlayerConfigurationEvent.class, event -> {
@@ -78,30 +85,27 @@ public class Main {
                 return;
             }
 
-            if (CFG == null) {
-                player.kick("Map config failed");
-                return;
-            }
-
             event.setSpawningInstance(INSTANCE);
 
             player.setGameMode(GameMode.CREATIVE);
-            player.setSkin(Skins.DEFAULT);
+            player.setSkin(Skins.T);
             player.setTeam(HIDDEN_TEAM);
         });
+
 
         events.addListener(PlayerSpawnEvent.class, event -> {
 
             Player player = event.getPlayer();
 
-            if (CFG == null) return;
+            if (!event.isFirstSpawn()) return;
 
-            GameMapConfig.Spawn spawn = CFG.lobbySpawns.get(RANDOM.nextInt(CFG.lobbySpawns.size()));
-
-            Pos pos = MapUtil.toPos(spawn);
+            var spawn = CFG.lobbySpawns.get(RANDOM.nextInt(CFG.lobbySpawns.size()));
+            var pos = MapUtil.toPos(spawn);
 
             player.teleport(pos);
             player.setRespawnPoint(pos);
+
+            gameManager.handleJoin(player);
         });
 
         server.start("0.0.0.0", 25565);
