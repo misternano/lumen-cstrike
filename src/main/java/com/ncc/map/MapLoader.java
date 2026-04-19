@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class MapLoader {
 
-    private final File mapsDir = new File("maps");
+    private final File mapsDir = new File("/app/maps");
     private final Random random = new Random();
 
     public File getRandomMap() {

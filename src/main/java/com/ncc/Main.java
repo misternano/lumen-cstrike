@@ -6,6 +6,7 @@ import com.ncc.map.MapLoader;
 import com.ncc.map.MapUtil;
 import com.ncc.skin.Skins;
 import net.hollowcube.polar.PolarLoader;
+import net.minestom.server.Auth;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.GameMode;
@@ -34,7 +35,7 @@ public class Main {
         System.out.println("Starting CSTRIKE instance...");
 
         MinecraftServer server = MinecraftServer.init(
-                // new Auth.Velocity("ubBS6I42IRUm0pQyDYVRaR3JIOZUySZKBGhHiI/OKRc=")
+                 new Auth.Velocity("ubBS6I42IRUm0pQyDYVRaR3JIOZUySZKBGhHiI/OKRc=")
         );
 
         // map loading
