@@ -4,9 +4,13 @@ import com.ncc.Main;
 import com.ncc.map.GameMapConfig;
 import com.ncc.map.MapConfigLoader;
 import net.hollowcube.polar.PolarLoader;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.arguments.ArgumentType;
+import net.minestom.server.command.builder.suggestion.SuggestionEntry;
 import net.minestom.server.instance.InstanceContainer;
 
 import java.io.File;
@@ -16,7 +20,40 @@ public class MapCommand extends Command {
     public MapCommand() {
         super("map");
 
-        var mapArg = ArgumentType.Word("map");
+        var mapArg = ArgumentType.Word("map").setSuggestionCallback((sender, context, suggestion) -> {
+
+            File folder = new File("maps");
+
+            if (!folder.exists()) return;
+
+            File[] polars = folder.listFiles((dir, name) -> name.endsWith(".polar"));
+            if (polars == null) return;
+
+            for (File f : polars) {
+
+                String name = f.getName().replace(".polar", "");
+
+                if (new File(folder, name + ".json").exists()) {
+                    suggestion.addEntry(new SuggestionEntry(name));
+                }
+            }
+        });
+
+        setDefaultExecutor((sender, context) -> {
+
+            if (Main.gameManager == null) {
+                sender.sendMessage(Component.text("Game not initialized.", NamedTextColor.RED));
+                return;
+            }
+            String current = Main.gameManager.getCurrentMapName();
+
+            if (current == null) {
+                sender.sendMessage(Component.text("No map loaded.", NamedTextColor.RED));
+                return;
+            }
+
+            sender.sendMessage(Component.text("Current map: ", NamedTextColor.GRAY).append(Component.text(current.toUpperCase(), NamedTextColor.GREEN, TextDecoration.BOLD)));
+        });
 
         addSyntax((sender, context) -> {
 
@@ -24,7 +61,10 @@ public class MapCommand extends Command {
             File file = new File("maps", mapName + ".polar");
 
             if (!file.exists()) {
-                sender.sendMessage("§cMap not found: " + mapName);
+                sender.sendMessage(Component.text("Map ", NamedTextColor.RED)
+                        .append(Component.text(mapName.toUpperCase(), NamedTextColor.DARK_RED, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+                        .append(Component.text(" not found", NamedTextColor.RED))
+                );
                 return;
             }
 
@@ -39,23 +79,26 @@ public class MapCommand extends Command {
                 GameMapConfig cfg = MapConfigLoader.load(json);
 
                 if (cfg == null) {
-                    sender.sendMessage("§cMap config invalid");
+                    sender.sendMessage(Component.text("Map config invalid.", NamedTextColor.RED));
                     return;
                 }
 
                 MinecraftServer.getInstanceManager().registerInstance(newInstance);
 
                 if (Main.gameManager == null) {
-                    sender.sendMessage("§cGameManager not initialized yet");
+                    sender.sendMessage(Component.text("GameManager not initialized yet!", NamedTextColor.RED));
                     return;
                 }
 
-                Main.gameManager.switchMap(newInstance, cfg);
+                Main.gameManager.switchMap(newInstance, cfg, mapName);
 
-                sender.sendMessage("§aSwitched map to " + mapName);
+                MinecraftServer.getConnectionManager().getOnlinePlayers()
+                        .forEach(p -> p.sendMessage(Component.text("Switched map to ", NamedTextColor.GRAY)
+                                .append(Component.text(mapName.toUpperCase(), NamedTextColor.GRAY, TextDecoration.BOLD))));
 
             } catch (Exception e) {
-                sender.sendMessage("§cFailed: " + e.getMessage());
+                sender.sendMessage(Component.text("Failed: ", NamedTextColor.RED)
+                        .append(Component.text(e.getMessage(), NamedTextColor.DARK_RED)));
                 e.printStackTrace();
             }
         }, mapArg);

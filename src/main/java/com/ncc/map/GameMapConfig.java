@@ -1,5 +1,7 @@
 package com.ncc.map;
 
+import net.minestom.server.coordinate.Pos;
+
 import java.util.List;
 
 public class GameMapConfig {
@@ -30,7 +32,7 @@ public class GameMapConfig {
         public int radius;
     }
 
-    public static class Pos {
+    public static class MapPos {
         public int x;
         public int y;
         public int z;
