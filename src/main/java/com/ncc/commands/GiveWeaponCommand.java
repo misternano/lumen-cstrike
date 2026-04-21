@@ -19,6 +19,7 @@ public class GiveWeaponCommand extends Command {
 
     public GiveWeaponCommand() {
         super("giveweapon");
+        setCondition(CommandAccess.require("cstrike.command.giveweapon"));
 
         var playerArg = ArgumentType.Word("player")
                 .setSuggestionCallback((sender, context, suggestion) ->

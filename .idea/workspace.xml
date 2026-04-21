@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49c059c1-8332-497c-b202-7bcdf90450a9" name="Changes" comment="almost a working gamemode woo">
+    <list default="true" id="49c059c1-8332-497c-b202-7bcdf90450a9" name="Changes" comment="refactor: game managers and event listeners split">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GamemodeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GamemodeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveItemCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveWeaponCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveWeaponCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MatchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MatchCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MoneyCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MoneyCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeamCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeamCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeleportCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/GameManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/skin/Skins.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/skin/Skins.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/PlayerStateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/PlayerStateManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/listener/ConnectionListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/listener/ConnectionListeners.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +210,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776753112394</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="refactor: game managers and event listeners split">
+      <option name="closed" value="true" />
+      <created>1776761688427</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776761688427</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,7 +226,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="almost a working gamemode woo" />
-    <option name="LAST_COMMIT_MESSAGE" value="almost a working gamemode woo" />
+    <MESSAGE value="refactor: game managers and event listeners split" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: game managers and event listeners split" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

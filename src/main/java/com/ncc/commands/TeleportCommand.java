@@ -12,6 +12,7 @@ public class TeleportCommand extends Command {
 
     public TeleportCommand() {
         super("tp");
+        setCondition(CommandAccess.require("cstrike.command.teleport"));
 
         var playerArg = ArgumentType.Word("player")
                 .setSuggestionCallback((sender, context, suggestion) ->

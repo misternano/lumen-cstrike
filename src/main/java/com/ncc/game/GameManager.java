@@ -293,9 +293,19 @@ public class GameManager {
         return frozen;
     }
 
+    public void refreshPlayerFormatting(Player player) {
+        playerStateManager.refreshFormatting(player);
+    }
+
     public void handleJoin(Player player) {
         assignTeam(player);
         loadoutManager.prepareLobbyInventory(player, buyMenuManager);
+        Main.moneyBelowNameService.syncAll(online(), this::getMoney);
+    }
+
+    public void handleLeave(Player player) {
+        playerStateManager.remove(player);
+        Main.moneyBelowNameService.removeViewer(player);
     }
 
     public String getCurrentMapName() {
@@ -324,6 +334,8 @@ public class GameManager {
             loadoutManager.prepareLobbyInventory(player, buyMenuManager);
             mapSessionManager.moveToLobbyInstance(player, instance);
         }
+
+        Main.moneyBelowNameService.syncAll(online(), this::getMoney);
 
         state = GameState.WAITING;
         countdown = 10;

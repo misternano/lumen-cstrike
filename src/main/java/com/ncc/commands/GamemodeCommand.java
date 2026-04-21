@@ -40,7 +40,7 @@ public class GamemodeCommand extends Command {
             sender.sendMessage(Component.text("Usage: /gamemode <survival|creative|adventure|spectator> [player]", NamedTextColor.RED));
         });
 
-        addSyntax((sender, context) -> {
+        addConditionalSyntax(CommandAccess.require("cstrike.command.gamemode.self"), (sender, context) -> {
            if (!(sender instanceof Player p)) {
                sender.sendMessage("Only players can use this command.");
                return;
@@ -60,7 +60,7 @@ public class GamemodeCommand extends Command {
                    .append(Component.text(mode.name().toUpperCase(), NamedTextColor.GREEN, TextDecoration.BOLD)));
         }, modeArg);
 
-        addSyntax((sender, context) -> {
+        addConditionalSyntax(CommandAccess.require("cstrike.command.gamemode.others"), (sender, context) -> {
 
             String modeName = context.get(modeArg);
             String targetName = context.get(playerArg);

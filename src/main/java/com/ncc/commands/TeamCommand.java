@@ -41,7 +41,7 @@ public class TeamCommand extends Command {
             sender.sendMessage(Component.text("Usage: /gamemode <t|ct> [player]", NamedTextColor.RED));
         });
 
-        addSyntax((sender, context) -> {
+        addConditionalSyntax(CommandAccess.require("cstrike.command.team.self"), (sender, context) -> {
 
             if (!(sender instanceof Player player)) {
                 sender.sendMessage("Only players can use this command.");
@@ -53,7 +53,7 @@ public class TeamCommand extends Command {
             applyTeam(player, teamName, sender);
         }, teamArg);
 
-        addSyntax((sender, context) -> {
+        addConditionalSyntax(CommandAccess.require("cstrike.command.team.others"), (sender, context) -> {
 
             String teamName = context.get(teamArg).toUpperCase();
             String targetName = context.get(playerArg);

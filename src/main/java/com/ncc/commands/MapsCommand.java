@@ -15,6 +15,7 @@ public class MapsCommand extends Command {
 
     public MapsCommand() {
         super("maps");
+        setCondition(CommandAccess.require("cstrike.command.maps"));
 
         setDefaultExecutor((sender, context) -> {
 

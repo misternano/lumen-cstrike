@@ -19,6 +19,7 @@ public class MapCommand extends Command {
 
     public MapCommand() {
         super("map");
+        setCondition(CommandAccess.require("cstrike.command.map"));
 
         var mapArg = ArgumentType.Word("map").setSuggestionCallback((sender, context, suggestion) -> {
 
@@ -62,7 +63,7 @@ public class MapCommand extends Command {
 
             if (!file.exists()) {
                 sender.sendMessage(Component.text("Map ", NamedTextColor.RED)
-                        .append(Component.text(mapName.toUpperCase(), NamedTextColor.DARK_RED, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+                        .append(Component.text(mapName.toUpperCase(), NamedTextColor.DARK_RED, TextDecoration.BOLD))
                         .append(Component.text(" not found", NamedTextColor.RED))
                 );
                 return;
@@ -94,7 +95,7 @@ public class MapCommand extends Command {
 
                 MinecraftServer.getConnectionManager().getOnlinePlayers()
                         .forEach(p -> p.sendMessage(Component.text("Switched map to ", NamedTextColor.GRAY)
-                                .append(Component.text(mapName.toUpperCase(), NamedTextColor.GRAY, TextDecoration.BOLD))));
+                                .append(Component.text(mapName.toUpperCase(), NamedTextColor.GREEN, TextDecoration.BOLD))));
 
             } catch (Exception e) {
                 sender.sendMessage(Component.text("Failed: ", NamedTextColor.RED)

@@ -3,7 +3,6 @@ package com.ncc.game;
 import com.ncc.Main;
 import com.ncc.skin.Skins;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
@@ -32,7 +31,6 @@ public final class PlayerStateManager {
     public void setTeam(Player player, TeamSide side) {
         teams.put(player.getUuid(), side);
         money.putIfAbsent(player.getUuid(), startMoney);
-        player.setTeam(side == TeamSide.CT ? Main.ctTeam : Main.tTeam);
 
         PlayerSkin skin = side == TeamSide.CT
                 ? Skins.CT_POOL.get(random.nextInt(Skins.CT_POOL.size()))
@@ -84,6 +82,17 @@ public final class PlayerStateManager {
         assignedSkins.clear();
     }
 
+    public void refreshFormatting(Player player) {
+        updateNametag(player);
+    }
+
+    public void remove(Player player) {
+        teams.remove(player.getUuid());
+        money.remove(player.getUuid());
+        assignedSkins.remove(player.getUuid());
+        Main.nametagService.remove(player);
+    }
+
     private TeamSide balancedTeam() {
         long ctCount = teams.values().stream().filter(team -> team == TeamSide.CT).count();
         long tCount = teams.values().stream().filter(team -> team == TeamSide.T).count();
@@ -102,18 +111,11 @@ public final class PlayerStateManager {
             }
 
             int moneyValue = money.getOrDefault(player.getUuid(), 0);
-            Component prefix = side == TeamSide.CT
-                    ? Component.text("[CT] ", NamedTextColor.BLUE)
-                    : Component.text("[T] ", NamedTextColor.RED);
-
-            Component name = Component.text()
-                    .append(prefix)
-                    .append(Component.text(player.getUsername(), NamedTextColor.WHITE))
-                    .append(Component.text(" $" + moneyValue, NamedTextColor.GREEN))
-                    .build();
+            Main.nametagService.apply(player, side, moneyValue);
+            Main.moneyBelowNameService.updateMoney(player, moneyValue);
+            Component name = Main.chatFormatService.buildDisplayName(player, side, moneyValue);
 
             player.setDisplayName(name);
-            player.setCustomNameVisible(true);
         });
     }
 }

@@ -22,6 +22,7 @@ public class MatchCommand extends Command {
 
     public MatchCommand() {
         super("match");
+        setCondition(CommandAccess.require("cstrike.command.match"));
 
         var actionArg = ArgumentType.Word("mode")
                 .setSuggestionCallback((sender, context, suggestion) ->

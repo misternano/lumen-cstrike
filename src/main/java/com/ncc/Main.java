@@ -8,25 +8,27 @@ import com.ncc.listener.BuyMenuListeners;
 import com.ncc.listener.ConnectionListeners;
 import com.ncc.listener.GunListeners;
 import com.ncc.map.*;
+import com.ncc.permissions.ChatFormatService;
+import com.ncc.permissions.MoneyBelowNameService;
+import com.ncc.permissions.NametagService;
+import com.ncc.permissions.PermissionService;
 import net.hollowcube.polar.PolarLoader;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.instance.InstanceContainer;
-import net.minestom.server.network.packet.server.play.TeamsPacket;
-import net.minestom.server.scoreboard.Team;
 
 import java.io.File;
+import java.util.Scanner;
 
 public class Main {
 
     public static InstanceContainer INSTANCE;
     public static GameMapConfig cfg;
     public static GameManager gameManager;
-
-    public static Team ctTeam;
-    public static Team tTeam;
+    public static PermissionService permissionService;
+    public static ChatFormatService chatFormatService;
+    public static NametagService nametagService;
+    public static MoneyBelowNameService moneyBelowNameService;
 
     public static final int MAX_PLAYERS = 10;
 
@@ -40,6 +42,10 @@ public class Main {
         );
 
         ItemRegistry.init();
+        permissionService = new PermissionService();
+        chatFormatService = new ChatFormatService(permissionService);
+        nametagService = new NametagService(chatFormatService);
+        moneyBelowNameService = new MoneyBelowNameService();
 
         // --- Map Loading
         MapLoader mapLoader = new MapLoader();
@@ -66,16 +72,6 @@ public class Main {
 
         MinecraftServer.getInstanceManager().registerInstance(INSTANCE);
 
-        // --- Team Creation & Styling
-        ctTeam = MinecraftServer.getTeamManager().createTeam("CT");
-        tTeam = MinecraftServer.getTeamManager().createTeam("T");
-
-        ctTeam.setNameTagVisibility(TeamsPacket.NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
-        tTeam.setNameTagVisibility(TeamsPacket.NameTagVisibility.HIDE_FOR_OTHER_TEAMS);
-
-        ctTeam.setPrefix(Component.text("[CT] ", NamedTextColor.BLUE));
-        tTeam.setPrefix(Component.text("[T] ", NamedTextColor.RED));
-
         // --- Game Manager
         gameManager = new GameManager(cfg, INSTANCE);
         gameManager.switchMap(INSTANCE, cfg, mapName);
@@ -90,6 +86,7 @@ public class Main {
         MinecraftServer.getCommandManager().register(new GiveWeaponCommand());
         MinecraftServer.getCommandManager().register(new TeamCommand());
         MinecraftServer.getCommandManager().register(new TeleportCommand());
+        MinecraftServer.getCommandManager().register(new RankCommand());
 
         // --- Event Handling
         GlobalEventHandler events = MinecraftServer.getGlobalEventHandler();
@@ -100,5 +97,26 @@ public class Main {
 
         // --- Initialize instance
         server.start("0.0.0.0", 25566);
+        startConsoleCommandLoop();
+    }
+
+    private static void startConsoleCommandLoop() {
+        Thread consoleThread = new Thread(() -> {
+            try (Scanner scanner = new Scanner(System.in)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine().trim();
+                    if (line.isEmpty()) {
+                        continue;
+                    }
+
+                    MinecraftServer.getCommandManager().executeServerCommand(line);
+                }
+            } catch (Exception exception) {
+                System.err.println("Console command loop stopped: " + exception.getMessage());
+            }
+        }, "console-command-thread");
+
+        consoleThread.setDaemon(true);
+        consoleThread.start();
     }
 }

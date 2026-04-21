@@ -14,6 +14,7 @@ public class MoneyCommand extends Command {
 
     public MoneyCommand() {
         super("money");
+        setCondition(CommandAccess.require("cstrike.command.money"));
 
         var playerArg = ArgumentType.Word("player")
                 .setSuggestionCallback((sender, context, suggestion) ->

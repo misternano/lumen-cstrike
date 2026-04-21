@@ -7,6 +7,8 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
+import net.minestom.server.event.player.PlayerChatEvent;
+import net.minestom.server.event.player.PlayerDisconnectEvent;
 import net.minestom.server.event.player.PlayerSkinInitEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 
@@ -55,5 +57,17 @@ public final class ConnectionListeners {
 
             event.setSkin(skin);
         });
+
+        events.addListener(PlayerChatEvent.class, event -> {
+            Player player = event.getPlayer();
+            event.setFormattedMessage(Main.chatFormatService.buildChatMessage(
+                    player,
+                    Main.gameManager.getTeam(player),
+                    event.getRawMessage()
+            ));
+        });
+
+        events.addListener(PlayerDisconnectEvent.class, event ->
+                Main.gameManager.handleLeave(event.getPlayer()));
     }
 }
