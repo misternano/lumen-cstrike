@@ -1,5 +1,6 @@
-package com.ncc.commands;
+package com.ncc.commands.utility;
 
+import com.ncc.commands.CommandAccess;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;

@@ -14,6 +14,9 @@ dependencies {
     implementation("net.minestom:minestom:2026.04.13-1.21.11")
     implementation("dev.hollowcube:polar:1.15.1")
     implementation("it.unimi.dsi:fastutil:8.5.18")
+    implementation("com.google.code.gson:gson:2.13.1")
+    implementation("org.xerial:sqlite-jdbc:3.49.1.0")
+    runtimeOnly("org.slf4j:slf4j-simple:2.0.17")
 }
 
 java {
@@ -26,6 +29,7 @@ tasks {
     jar {
         manifest {
             attributes["Main-Class"] = "com.ncc.Main"
+            attributes["Enable-Native-Access"] = "ALL-UNNAMED"
         }
     }
 
@@ -35,5 +39,9 @@ tasks {
     shadowJar {
         mergeServiceFiles()
         archiveClassifier.set("")
+        manifest {
+            attributes["Main-Class"] = "com.ncc.Main"
+            attributes["Enable-Native-Access"] = "ALL-UNNAMED"
+        }
     }
 }

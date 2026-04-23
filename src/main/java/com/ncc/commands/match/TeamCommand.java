@@ -1,6 +1,7 @@
-package com.ncc.commands;
+package com.ncc.commands.match;
 
 import com.ncc.Main;
+import com.ncc.commands.CommandAccess;
 import com.ncc.game.TeamSide;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

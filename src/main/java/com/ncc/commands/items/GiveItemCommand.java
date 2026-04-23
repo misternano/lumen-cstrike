@@ -1,5 +1,6 @@
-package com.ncc.commands;
+package com.ncc.commands.items;
 
+import com.ncc.commands.CommandAccess;
 import com.ncc.game.gun.GunManager;
 import com.ncc.game.items.ItemRegistry;
 import net.kyori.adventure.text.Component;
@@ -51,7 +52,7 @@ public class GiveItemCommand extends Command {
             giveItem(target, itemName.toLowerCase(), itemStack);
 
             sender.sendMessage(Component.text("Gave ", NamedTextColor.GRAY)
-                    .append(Component.text(prettyName(itemName), NamedTextColor.AQUA, TextDecoration.BOLD))
+                    .append(Component.text(prettyName(itemName), NamedTextColor.GREEN, TextDecoration.BOLD))
                     .append(Component.text(" to ", NamedTextColor.GRAY))
                     .append(Component.text(target.getUsername(), NamedTextColor.YELLOW)));
         }, playerArg, itemArg);

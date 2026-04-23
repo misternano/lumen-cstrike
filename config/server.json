@@ -1,0 +1,31 @@
+{
+  "maps": {
+    "directory": "maps",
+    "selection": "random",
+    "startupMap": ""
+  },
+  "match": {
+    "minimumPlayers": 1,
+    "maxPlayers": 10,
+    "startingMoney": 800,
+    "countdownSeconds": 10,
+    "goCountdownSeconds": 3,
+    "postRoundSeconds": 15
+  },
+  "bomb": {
+    "plantTicks": 60,
+    "defuseTicks": 200,
+    "defuseWithKitTicks": 100,
+    "fuseTicks": 800,
+    "explosionDamageRadius": 7.5,
+    "explosionMaxDamage": 24.0
+  },
+  "fallDamage": {
+    "enabled": true,
+    "sourceUnitsPerBlock": 40.0,
+    "sourceGravity": 800.0,
+    "safeFallSpeed": 580.0,
+    "fatalFallSpeed": 1024.0,
+    "minecraftHealthDivisor": 5.0
+  }
+}

@@ -1,6 +1,7 @@
-package com.ncc.commands;
+package com.ncc.commands.items;
 
 import com.ncc.Main;
+import com.ncc.commands.CommandAccess;
 import com.ncc.game.gun.GunDefinition;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -49,7 +50,7 @@ public class GiveWeaponCommand extends Command {
             Main.gameManager.getGunManager().giveWeapon(target, definition);
 
             sender.sendMessage(Component.text("Gave ", NamedTextColor.GRAY)
-                    .append(Component.text(definition.displayName(), NamedTextColor.GOLD, TextDecoration.BOLD))
+                    .append(Component.text(definition.displayName(), NamedTextColor.GREEN, TextDecoration.BOLD))
                     .append(Component.text(" to ", NamedTextColor.GRAY))
                     .append(Component.text(target.getUsername(), NamedTextColor.YELLOW)));
         }, playerArg, weaponArg);

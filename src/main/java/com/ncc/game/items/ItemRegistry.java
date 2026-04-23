@@ -1,6 +1,7 @@
 package com.ncc.game.items;
 
 import com.ncc.game.gun.GunDefinition;
+import net.minestom.server.component.DataComponents;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 
@@ -52,8 +53,16 @@ public class ItemRegistry {
 
     public static GunDefinition getGunDefinition(ItemStack itemStack) {
         if (itemStack == null) return null;
-        Material material = itemStack.material();
+        String itemModel = itemStack.get(DataComponents.ITEM_MODEL);
+        if (itemModel != null) {
+            for (GunDefinition definition : GunDefinition.values()) {
+                if (definition.itemModel().equals(itemModel)) {
+                    return definition;
+                }
+            }
+        }
 
+        Material material = itemStack.material();
         if (material == Material.GOLDEN_HOE) return GunDefinition.GLOCK;
         if (material == Material.STONE_HOE) return GunDefinition.USP_S;
         if (material == Material.DIAMOND_HOE) return GunDefinition.AK47;

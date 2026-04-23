@@ -1,5 +1,6 @@
-package com.ncc.commands;
+package com.ncc.commands.utility;
 
+import com.ncc.commands.CommandAccess;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
@@ -14,34 +15,38 @@ public class TeleportCommand extends Command {
         super("tp");
         setCondition(CommandAccess.require("cstrike.command.teleport"));
 
-        var playerArg = ArgumentType.Word("player")
-                .setSuggestionCallback((sender, context, suggestion) ->
-                        MinecraftServer.getConnectionManager().getOnlinePlayers().forEach(player ->
-                                suggestion.addEntry(new SuggestionEntry(player.getUsername()))));
-
-        var targetArg = ArgumentType.Word("target")
+        var targetArg = ArgumentType.Word("player")
                 .setSuggestionCallback((sender, context, suggestion) ->
                         MinecraftServer.getConnectionManager().getOnlinePlayers().forEach(player ->
                                 suggestion.addEntry(new SuggestionEntry(player.getUsername()))));
 
         setDefaultExecutor((sender, context) ->
-                sender.sendMessage(Component.text("Usage: /tp <player> <target>", NamedTextColor.RED)));
+                sender.sendMessage(Component.text("Usage: /tp <player>", NamedTextColor.RED)));
 
         addSyntax((sender, context) -> {
-            Player player = findPlayer(context.get(playerArg));
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Only players can use this command.");
+                return;
+            }
+
             Player target = findPlayer(context.get(targetArg));
 
-            if (player == null || target == null) {
+            if (target == null) {
                 sender.sendMessage(Component.text("Player not found.", NamedTextColor.RED));
                 return;
             }
 
+            if (target.equals(player)) {
+                sender.sendMessage(Component.text("You are already there.", NamedTextColor.RED));
+                return;
+            }
+
             player.teleport(target.getPosition());
-            sender.sendMessage(Component.text("Teleported ", NamedTextColor.GRAY)
-                    .append(Component.text(player.getUsername(), NamedTextColor.YELLOW))
-                    .append(Component.text(" to ", NamedTextColor.GRAY))
-                    .append(Component.text(target.getUsername(), NamedTextColor.GREEN)));
-        }, playerArg, targetArg);
+            player.sendMessage(Component.text("Teleported to ", NamedTextColor.GRAY)
+                    .append(Component.text(target.getUsername(), NamedTextColor.YELLOW)));
+            target.sendMessage(Component.text(player.getUsername(), NamedTextColor.YELLOW)
+                    .append(Component.text(" teleported to you.", NamedTextColor.GRAY)));
+        }, targetArg);
     }
 
     private Player findPlayer(String username) {

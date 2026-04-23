@@ -1,6 +1,7 @@
 package com.ncc.game.bomb;
 
 import com.ncc.Main;
+import com.ncc.config.ServerConfig;
 import com.ncc.game.TeamSide;
 import com.ncc.map.GameMapConfig;
 import net.kyori.adventure.sound.Sound;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class BombManager {
 
     private final GameMapConfig cfg;
+    private final ServerConfig.Bomb config;
     private Instance instance;
 
     private BombState state = BombState.NONE;
@@ -43,24 +45,19 @@ public class BombManager {
 
     private int plantProgress;
     private int defuseProgress;
-    private int activeDefuseTime = DEFUSE_TIME;
+    private int activeDefuseTime;
 
-    private static final int PLANT_TIME = 60;
-    private static final int DEFUSE_TIME = 10 * 20;
-    private static final int DEFUSE_TIME_KIT = 5 * 20;
-
-    private static final int BOMB_FUSE_TIME = 40 * 20;
-    private static final double EXPLOSION_DAMAGE_RADIUS = 7.5;
-    private static final float EXPLOSION_MAX_DAMAGE = 24f;
     private static final RegistryKey<DamageType> EXPLOSION_DAMAGE_TYPE = RegistryKey.unsafeOf("explosion");
     private int bombFuseProgress;
     private int nextBeepAt;
 
     private Pos bombPos;
 
-    public BombManager(GameMapConfig cfg, Instance instance) {
+    public BombManager(GameMapConfig cfg, Instance instance, ServerConfig.Bomb config) {
         this.cfg = cfg;
         this.instance = instance;
+        this.config = config;
+        this.activeDefuseTime = config.defuseTicks;
     }
 
     // --- Plant Management
@@ -139,7 +136,7 @@ public class BombManager {
 
             if (defuser == null) {
                 defuser = p;
-                activeDefuseTime = playerHasDefuseKit(p) ? DEFUSE_TIME_KIT : DEFUSE_TIME;
+                activeDefuseTime = playerHasDefuseKit(p) ? config.defuseWithKitTicks : config.defuseTicks;
                 state = BombState.DEFUSING;
             }
         } else {
@@ -157,7 +154,7 @@ public class BombManager {
 
         defuser = null;
         defuseProgress = 0;
-        activeDefuseTime = DEFUSE_TIME;
+        activeDefuseTime = config.defuseTicks;
     }
 
     private void finishDefuse() {
@@ -191,7 +188,7 @@ public class BombManager {
                 plantProgress++;
                 sendPlantBar(planter);
 
-                if (plantProgress >= PLANT_TIME) {
+                if (plantProgress >= config.plantTicks) {
                     finishPlant();
                 }
             }
@@ -243,7 +240,7 @@ public class BombManager {
         bombFuseProgress++;
         playBombTickIfNeeded();
 
-        if (bombFuseProgress >= BOMB_FUSE_TIME) {
+        if (bombFuseProgress >= config.fuseTicks) {
             explodeBomb();
             return true;
         }
@@ -263,7 +260,7 @@ public class BombManager {
     private void playBombTickIfNeeded() {
         if (bombFuseProgress < nextBeepAt) return;
 
-        int remaining = BOMB_FUSE_TIME - bombFuseProgress;
+        int remaining = config.fuseTicks - bombFuseProgress;
         int interval;
 
         if (remaining > 600) interval = 20;
@@ -373,7 +370,7 @@ public class BombManager {
     }
 
     private void applyExplosionDamage(Pos center) {
-        double radiusSquared = EXPLOSION_DAMAGE_RADIUS * EXPLOSION_DAMAGE_RADIUS;
+        double radiusSquared = config.explosionDamageRadius * config.explosionDamageRadius;
 
         for (Player player : instance.getPlayers()) {
             var pos = player.getPosition();
@@ -388,8 +385,8 @@ public class BombManager {
             }
 
             double distance = Math.sqrt(distanceSquared);
-            float falloff = (float) Math.max(0.15, 1.0 - (distance / EXPLOSION_DAMAGE_RADIUS));
-            float damage = EXPLOSION_MAX_DAMAGE * falloff;
+            float falloff = (float) Math.max(0.15, 1.0 - (distance / config.explosionDamageRadius));
+            float damage = config.explosionMaxDamage * falloff;
 
             player.damage(EXPLOSION_DAMAGE_TYPE, damage);
         }
@@ -405,7 +402,7 @@ public class BombManager {
 
         plantProgress = 0;
         defuseProgress = 0;
-        activeDefuseTime = DEFUSE_TIME;
+        activeDefuseTime = config.defuseTicks;
         bombFuseProgress = 0;
         nextBeepAt = 0;
 
@@ -465,7 +462,7 @@ public class BombManager {
 
     // --- Utilities :: UI
     private void sendPlantBar(Player p) {
-        sendBar(p, "Planting", plantProgress, PLANT_TIME);
+        sendBar(p, "Planting", plantProgress, config.plantTicks);
     }
 
     private void sendDefuseBar(Player p) {

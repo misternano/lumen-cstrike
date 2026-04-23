@@ -4,21 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="49c059c1-8332-497c-b202-7bcdf90450a9" name="Changes" comment="refactor: game managers and event listeners split">
+    <list default="true" id="49c059c1-8332-497c-b202-7bcdf90450a9" name="Changes" comment="feat: rudimentary permissions system + better nametag handling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GamemodeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GamemodeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveItemCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveWeaponCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveWeaponCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MatchCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MatchCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MoneyCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MoneyCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeamCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeamCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeleportCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/CommandAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/commands/CommandAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GamemodeCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveItemCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/GiveWeaponCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MapsCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MatchCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/MoneyCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/RankCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeamCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/commands/TeleportCommand.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/GameManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/PlayerStateManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/PlayerStateManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/bomb/BombManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/bomb/BombManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/gun/GunDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/gun/GunDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/gun/GunManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/gun/GunManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/items/GunItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/items/GunItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/game/items/ItemRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/game/items/ItemRegistry.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/listener/ConnectionListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/listener/ConnectionListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/map/MapLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/map/MapLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/ChatFormatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/ChatFormatService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/PermissionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/PermissionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/Rank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ncc/permissions/Rank.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +37,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="56" />
+    <option name="cachedIndexableFilesCount" value="77" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExternalProjectsData">
@@ -218,7 +229,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776761688427</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="feat: rudimentary permissions system + better nametag handling">
+      <option name="closed" value="true" />
+      <created>1776765497444</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776765497444</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,7 +246,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="almost a working gamemode woo" />
     <MESSAGE value="refactor: game managers and event listeners split" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: game managers and event listeners split" />
+    <MESSAGE value="feat: rudimentary permissions system + better nametag handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: rudimentary permissions system + better nametag handling" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

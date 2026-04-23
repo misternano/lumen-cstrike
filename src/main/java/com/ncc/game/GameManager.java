@@ -1,6 +1,7 @@
 package com.ncc.game;
 
 import com.ncc.Main;
+import com.ncc.config.ServerConfig;
 import com.ncc.game.bomb.BombManager;
 import com.ncc.game.gun.GunManager;
 import net.kyori.adventure.sound.Sound;
@@ -23,13 +24,10 @@ import java.util.List;
 
 public class GameManager {
 
-    private static final int MINIMUM_PLAYERS = 1;
-    private static final int MAX_PLAYERS = 10;
-    private static final int START_MONEY = 800;
-    private static final int POST_ROUND_SECONDS = 15;
-
     public static GameManager gameManager;
 
+    private final ServerConfig.Match matchConfig;
+    private final ServerConfig.Bomb bombConfig;
     private final PlayerStateManager playerStateManager;
     private final BuyMenuManager buyMenuManager;
     private final LoadoutManager loadoutManager;
@@ -42,18 +40,23 @@ public class GameManager {
     private Task bombLoopTask;
 
     private GameState state = GameState.WAITING;
-    private int countdown = 10;
-    private int goCountdown = 4;
-    private int postRoundCountdown = POST_ROUND_SECONDS;
+    private int countdown;
+    private int goCountdown;
+    private int postRoundCountdown;
     private boolean frozen = false;
 
-    public GameManager(com.ncc.map.GameMapConfig cfg, Instance instance) {
+    public GameManager(com.ncc.map.GameMapConfig cfg, Instance instance, ServerConfig.Match matchConfig, ServerConfig.Bomb bombConfig) {
         InstanceContainer container = (InstanceContainer) instance;
-        this.playerStateManager = new PlayerStateManager(START_MONEY);
+        this.matchConfig = matchConfig;
+        this.bombConfig = bombConfig;
+        this.countdown = matchConfig.countdownSeconds;
+        this.goCountdown = matchConfig.goCountdownSeconds + 1;
+        this.postRoundCountdown = matchConfig.postRoundSeconds;
+        this.playerStateManager = new PlayerStateManager(matchConfig.startingMoney);
         this.buyMenuManager = new BuyMenuManager();
         this.loadoutManager = new LoadoutManager();
         this.mapSessionManager = new MapSessionManager(cfg, container);
-        this.bombManager = new BombManager(cfg, instance);
+        this.bombManager = new BombManager(cfg, instance, bombConfig);
         this.gunManager = new GunManager();
         startGameLoop();
     }
@@ -108,21 +111,21 @@ public class GameManager {
     }
 
     private void tickWaiting(int playerCount) {
-        if (playerCount >= MINIMUM_PLAYERS) {
+        if (playerCount >= matchConfig.minimumPlayers) {
             state = GameState.COUNTDOWN;
-            countdown = 10;
+            countdown = matchConfig.countdownSeconds;
         }
 
-        sendActionBar("§cWaiting for players... §8| §f" + playerCount + "§7/§f" + MAX_PLAYERS);
+        sendActionBar("§cWaiting for players... §8| §f" + playerCount + "§7/§f" + matchConfig.maxPlayers);
     }
 
     private void tickCountdown(int playerCount) {
-        if (playerCount < MINIMUM_PLAYERS) {
+        if (playerCount < matchConfig.minimumPlayers) {
             state = GameState.WAITING;
             return;
         }
 
-        sendActionBar("§aStarting in " + countdown + "s §8| §f" + playerCount + "§7/§f" + MAX_PLAYERS);
+        sendActionBar("§aStarting in " + countdown + "s §8| §f" + playerCount + "§7/§f" + matchConfig.maxPlayers);
 
         if (--countdown <= 0) {
             startRoundSetup();
@@ -165,7 +168,7 @@ public class GameManager {
 
         bombManager.cancelPlant();
         frozen = false;
-        postRoundCountdown = POST_ROUND_SECONDS;
+        postRoundCountdown = matchConfig.postRoundSeconds;
         state = GameState.ENDING_ROUND;
 
         Component winText = winner == null
@@ -186,9 +189,9 @@ public class GameManager {
         rebuildRoundManagers();
 
         frozen = false;
-        goCountdown = 3;
-        countdown = 10;
-        postRoundCountdown = POST_ROUND_SECONDS;
+        goCountdown = matchConfig.goCountdownSeconds;
+        countdown = matchConfig.countdownSeconds;
+        postRoundCountdown = matchConfig.postRoundSeconds;
         state = GameState.COUNTDOWN;
 
         mapSessionManager.teleportPlayersToTeamSpawns(online(), playerStateManager);
@@ -198,9 +201,9 @@ public class GameManager {
         rebuildRoundManagers();
 
         frozen = false;
-        countdown = 10;
-        goCountdown = 4;
-        postRoundCountdown = POST_ROUND_SECONDS;
+        countdown = matchConfig.countdownSeconds;
+        goCountdown = matchConfig.goCountdownSeconds + 1;
+        postRoundCountdown = matchConfig.postRoundSeconds;
         state = GameState.WAITING;
 
         for (Player player : online()) {
@@ -216,7 +219,7 @@ public class GameManager {
     private void startRoundSetup() {
         mapSessionManager.teleportPlayersToTeamSpawns(online(), playerStateManager);
         frozen = true;
-        goCountdown = 3;
+        goCountdown = matchConfig.goCountdownSeconds;
         loadoutManager.giveRoundLoadout(online(), playerStateManager, buyMenuManager, gunManager);
     }
 
@@ -338,13 +341,13 @@ public class GameManager {
         Main.moneyBelowNameService.syncAll(online(), this::getMoney);
 
         state = GameState.WAITING;
-        countdown = 10;
-        postRoundCountdown = POST_ROUND_SECONDS;
+        countdown = matchConfig.countdownSeconds;
+        postRoundCountdown = matchConfig.postRoundSeconds;
         frozen = false;
     }
 
     private void rebuildRoundManagers() {
-        bombManager = new BombManager(mapSessionManager.config(), mapSessionManager.currentInstance());
+        bombManager = new BombManager(mapSessionManager.config(), mapSessionManager.currentInstance(), bombConfig);
         gunManager = new GunManager();
     }
 

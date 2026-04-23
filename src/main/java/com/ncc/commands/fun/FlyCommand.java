@@ -1,0 +1,30 @@
+package com.ncc.commands.fun;
+
+import com.ncc.Main;
+import com.ncc.commands.CommandAccess;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.minestom.server.command.builder.Command;
+import net.minestom.server.entity.Player;
+
+public class FlyCommand extends Command {
+
+    public FlyCommand() {
+        super("fly");
+        setCondition(CommandAccess.require("cstrike.command.fly"));
+
+        setDefaultExecutor((sender, context) -> {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("Only players can use this command.");
+                return;
+            }
+
+            boolean enabled = Main.abilityManager.toggleFly(player);
+            player.sendMessage(Component.text("Fly mode set to ", NamedTextColor.GRAY)
+                    .append(Component.text(enabled ? "ENABLED" : "DISABLED",
+                            enabled ? NamedTextColor.GREEN : NamedTextColor.RED,
+                            TextDecoration.BOLD)));
+        });
+    }
+}

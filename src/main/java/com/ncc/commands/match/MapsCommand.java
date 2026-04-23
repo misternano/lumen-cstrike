@@ -1,5 +1,7 @@
-package com.ncc.commands;
+package com.ncc.commands.match;
 
+import com.ncc.Main;
+import com.ncc.commands.CommandAccess;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -19,7 +21,7 @@ public class MapsCommand extends Command {
 
         setDefaultExecutor((sender, context) -> {
 
-            File folder = new File("maps");
+            File folder = Main.config.maps.directoryPath().toFile();
 
             if (!folder.exists() || !folder.isDirectory()) {
                 sender.sendMessage(Component.text("Maps folder not found.", NamedTextColor.RED));

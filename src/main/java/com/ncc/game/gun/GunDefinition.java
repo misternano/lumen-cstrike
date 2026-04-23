@@ -4,20 +4,23 @@ import com.ncc.game.items.ItemType;
 import net.minestom.server.item.Material;
 
 public enum GunDefinition {
-    GLOCK("Glock-18", ItemType.PISTOL, Material.GOLDEN_HOE, 20, 120, 300, 150, 6.0f, 15.0f,
+    GLOCK("Glock-18", "modern_guns:gun/glock_17", "modern_guns:glock_17_fire", "modern_guns:glock_17_reload", ItemType.PISTOL, Material.CROSSBOW, 20, 120, 300, 150, 6.0f, 15.0f,
             new double[]{0.0, 0.05, -0.04, 0.08, -0.06, 0.09, -0.08, 0.10},
             new double[]{0.40, 0.42, 0.44, 0.46, 0.48, 0.50, 0.52, 0.54}),
-    USP_S("USP-S", ItemType.PISTOL, Material.STONE_HOE, 12, 48, 320, 160, 7.2f, 18.0f,
+    USP_S("USP-S", "modern_guns:gun/sig_p320", "modern_guns:sig_p320_fire", "modern_guns:sig_p320_reload", ItemType.PISTOL, Material.CROSSBOW, 12, 48, 320, 160, 7.2f, 18.0f,
             new double[]{0.0, 0.04, -0.03, 0.05, -0.04, 0.06, -0.05, 0.06},
             new double[]{0.34, 0.36, 0.38, 0.40, 0.42, 0.44, 0.46, 0.48}),
-    AK47("AK-47", ItemType.ASSAULT, Material.DIAMOND_HOE, 30, 90, 100, 1800, 9.5f, 22.0f,
+    AK47("AK-47", "modern_guns:gun/ak47", "modern_guns:ak47_fire", "modern_guns:ak47_reload", ItemType.ASSAULT, Material.CROSSBOW, 30, 90, 100, 1800, 9.5f, 22.0f,
             new double[]{0.0, 0.18, -0.22, 0.35, 0.48, 0.42, -0.18, -0.45, -0.58, -0.50, 0.18, 0.40, 0.58, 0.70, 0.52, -0.18, -0.52, -0.74, -0.58, -0.22},
             new double[]{0.80, 0.88, 0.95, 1.00, 1.06, 1.12, 1.15, 1.18, 1.22, 1.24, 1.28, 1.30, 1.32, 1.34, 1.30, 1.22, 1.16, 1.10, 1.04, 0.96}),
-    M4A1("M4A1-S", ItemType.ASSAULT, Material.IRON_HOE, 20, 80, 90, 1700, 8.7f, 20.0f,
+    M4A1("M4A1-S", "modern_guns:gun/m4a1", "modern_guns:m4a1_fire", "modern_guns:m4a1_reload", ItemType.ASSAULT, Material.CROSSBOW, 20, 80, 90, 1700, 8.7f, 20.0f,
             new double[]{0.0, 0.12, -0.10, 0.18, 0.24, 0.20, -0.10, -0.20, -0.26, -0.22, 0.10, 0.20, 0.28, 0.30, 0.24, -0.10},
             new double[]{0.68, 0.72, 0.76, 0.80, 0.84, 0.88, 0.90, 0.92, 0.95, 0.98, 1.00, 1.02, 1.04, 1.06, 1.02, 0.98});
 
     private final String displayName;
+    private final String itemModel;
+    private final String fireSound;
+    private final String reloadSound;
     private final ItemType itemType;
     private final Material material;
     private final int magazineSize;
@@ -29,9 +32,12 @@ public enum GunDefinition {
     private final double[] recoilYaw;
     private final double[] recoilPitch;
 
-    GunDefinition(String displayName, ItemType itemType, Material material, int magazineSize, int reserveAmmo, int fireIntervalMs,
+    GunDefinition(String displayName, String itemModel, String fireSound, String reloadSound, ItemType itemType, Material material, int magazineSize, int reserveAmmo, int fireIntervalMs,
                   int reloadTimeMs, float baseDamage, float headshotDamage, double[] recoilYaw, double[] recoilPitch) {
         this.displayName = displayName;
+        this.itemModel = itemModel;
+        this.fireSound = fireSound;
+        this.reloadSound = reloadSound;
         this.itemType = itemType;
         this.material = material;
         this.magazineSize = magazineSize;
@@ -46,6 +52,18 @@ public enum GunDefinition {
 
     public String displayName() {
         return displayName;
+    }
+
+    public String itemModel() {
+        return itemModel;
+    }
+
+    public String fireSound() {
+        return fireSound;
+    }
+
+    public String reloadSound() {
+        return reloadSound;
     }
 
     public ItemType itemType() {

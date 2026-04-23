@@ -1,61 +1,70 @@
 package com.ncc.permissions;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
-public enum Rank {
-    DIRECTOR("Director", "[DIRECTOR] ", NamedTextColor.RED, Set.of(
-            "*"
-    )),
-    SUPERVISOR("Supervisor", "[SUPERVISOR] ", NamedTextColor.DARK_PURPLE, Set.of(
-            "cstrike.command.*",
-            "cstrike.rank.manage",
-            "cstrike.rank.view"
-    )),
-    HEAD_ADMINISTRATOR("Head Administrator", "[HEAD ADMINISTRATOR] ", NamedTextColor.GOLD, Set.of(
-            "cstrike.command.*",
-            "cstrike.rank.manage",
-            "cstrike.rank.view"
-    )),
-    ADMINISTRATOR("Administrator", "[ADMINISTRATOR] ", NamedTextColor.BLUE, Set.of(
-            "cstrike.command.maps",
-            "cstrike.command.match",
-            "cstrike.command.team.self",
-            "cstrike.command.team.others",
-            "cstrike.command.teleport",
-            "cstrike.rank.view"
-    )),
-    MODERATOR("Moderator", "[MODERATOR] ", NamedTextColor.DARK_GREEN, Set.of(
-            "cstrike.command.maps",
-            "cstrike.command.teleport",
-            "cstrike.rank.view"
-    )),
-    PLAYER("", "", NamedTextColor.WHITE, Set.of(
-            "cstrike.command.maps",
-            "cstrike.rank.view"
-    ));
+public final class Rank {
 
+    private final String id;
     private final String displayName;
     private final String prefix;
-    private final NamedTextColor nameColor;
-    private final Set<String> permissions;
+    private final TextColor nameColor;
+    private final int weight;
+    private final String parentId;
+    private final Map<String, Boolean> permissions;
+    private Rank parent;
 
-    Rank(String displayName, String prefix, NamedTextColor nameColor, Set<String> permissions) {
+    public Rank(String id, String displayName, String prefix, TextColor nameColor, int weight, String parentId, Map<String, Boolean> permissions) {
+        this.id = id;
         this.displayName = displayName;
         this.prefix = prefix;
         this.nameColor = nameColor;
-        this.permissions = permissions;
+        this.weight = weight;
+        this.parentId = parentId == null || parentId.isBlank() ? null : normalizeId(parentId);
+        this.permissions = Collections.unmodifiableMap(new LinkedHashMap<>(permissions));
+    }
+
+    public String id() {
+        return id;
     }
 
     public String displayName() {
         return displayName;
     }
 
-    public NamedTextColor nameColor() {
+    public TextColor nameColor() {
         return nameColor;
+    }
+
+    public int weight() {
+        return weight;
+    }
+
+    public String prefix() {
+        return prefix;
+    }
+
+    public String parentId() {
+        return parentId;
+    }
+
+    public Rank parent() {
+        return parent;
+    }
+
+    public void setParent(Rank parent) {
+        this.parent = parent;
+    }
+
+    public Map<String, Boolean> permissions() {
+        return permissions;
     }
 
     public Component prefixComponent() {
@@ -67,25 +76,47 @@ public enum Rank {
     }
 
     public boolean hasPermission(String node) {
-        if (permissions.contains("*") || permissions.contains(node)) {
-            return true;
+        Boolean localResult = resolveLocalPermission(node);
+        if (localResult != null) {
+            return localResult;
         }
 
-        for (String permission : permissions) {
+        return parent != null && parent.hasPermission(node);
+    }
+
+    private Boolean resolveLocalPermission(String node) {
+        Boolean exact = permissions.get(node);
+        if (exact != null) {
+            return exact;
+        }
+
+        Boolean bestResult = null;
+        int bestLength = -1;
+        for (Map.Entry<String, Boolean> entry : permissions.entrySet()) {
+            String permission = entry.getKey();
             if (!permission.endsWith("*")) {
                 continue;
             }
 
             String prefix = permission.substring(0, permission.length() - 1);
-            if (node.startsWith(prefix)) {
-                return true;
+            if (node.startsWith(prefix) && prefix.length() > bestLength) {
+                bestResult = entry.getValue();
+                bestLength = prefix.length();
             }
         }
 
-        return false;
+        return bestResult;
     }
 
-    public static Rank fromInput(String input) {
-        return Rank.valueOf(input.trim().toUpperCase(Locale.ROOT));
+    public static String normalizeId(String input) {
+        return input.trim().toLowerCase(Locale.ROOT);
+    }
+
+    public static Map<String, Boolean> grantedPermissions(Set<String> permissions) {
+        Map<String, Boolean> mapped = new LinkedHashMap<>();
+        for (String permission : new LinkedHashSet<>(permissions)) {
+            mapped.put(permission, true);
+        }
+        return mapped;
     }
 }

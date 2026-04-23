@@ -4,6 +4,7 @@ import com.ncc.Main;
 import com.ncc.game.TeamSide;
 import com.ncc.game.items.GunItem;
 import com.ncc.game.items.ItemRegistry;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,6 +16,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
 import net.minestom.server.registry.RegistryKey;
+import net.minestom.server.sound.CustomSoundEvent;
 import net.minestom.server.sound.SoundEvent;
 
 import java.util.EnumMap;
@@ -131,7 +133,7 @@ public final class GunManager {
         ShotHit hit = traceShot(player, start, direction);
         Pos end = hit != null ? hit.position : start.add(direction.mul(SHOT_RANGE));
 
-        playShotEffects(player, start, end);
+        playShotEffects(definition, player, start, end);
 
         if (hit != null && hit.target != null) {
             float damage = isHeadshot(hit) ? definition.headshotDamage() : definition.baseDamage();
@@ -154,7 +156,7 @@ public final class GunManager {
     private void startReload(Player player, GunDefinition definition, GunState state) {
         state.reloadEndAt = System.currentTimeMillis() + definition.reloadTimeMs();
         player.playSound(Sound.sound(
-                SoundEvent.ITEM_ARMOR_EQUIP_IRON,
+                customSound(definition.reloadSound()),
                 Sound.Source.MASTER,
                 0.8f,
                 1.1f
@@ -172,12 +174,6 @@ public final class GunManager {
         state.shotIndex = 0;
 
         syncItem(player, definition, state);
-        player.playSound(Sound.sound(
-                SoundEvent.ITEM_BUNDLE_INSERT,
-                Sound.Source.MASTER,
-                0.9f,
-                1.25f
-        ));
     }
 
     private void syncItem(Player player, GunDefinition definition, GunState state) {
@@ -258,7 +254,7 @@ public final class GunManager {
         return hit.position.y() >= headLine;
     }
 
-    private void playShotEffects(Player shooter, Pos start, Pos end) {
+    private void playShotEffects(GunDefinition definition, Player shooter, Pos start, Pos end) {
         Instance instance = shooter.getInstance();
         if (instance == null) return;
 
@@ -266,7 +262,7 @@ public final class GunManager {
         Pos muzzle = start.add(direction.mul(0.7));
 
         instance.playSoundExcept(null, Sound.sound(
-                SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST,
+                customSound(definition.fireSound()),
                 Sound.Source.MASTER,
                 0.85f,
                 0.65f
@@ -315,6 +311,10 @@ public final class GunManager {
                 0.75f,
                 1.4f
         ));
+    }
+
+    private SoundEvent customSound(String soundKey) {
+        return new CustomSoundEvent(Key.key(soundKey), null);
     }
 
     private Vec directionFromView(float yaw, float pitch) {

@@ -1,6 +1,7 @@
-package com.ncc.commands;
+package com.ncc.commands.match;
 
 import com.ncc.Main;
+import com.ncc.commands.CommandAccess;
 import com.ncc.map.GameMapConfig;
 import com.ncc.map.MapConfigLoader;
 import net.hollowcube.polar.PolarLoader;
@@ -23,7 +24,7 @@ public class MapCommand extends Command {
 
         var mapArg = ArgumentType.Word("map").setSuggestionCallback((sender, context, suggestion) -> {
 
-            File folder = new File("maps");
+            File folder = Main.config.maps.directoryPath().toFile();
 
             if (!folder.exists()) return;
 
@@ -59,7 +60,7 @@ public class MapCommand extends Command {
         addSyntax((sender, context) -> {
 
             String mapName = context.get(mapArg);
-            File file = new File("maps", mapName + ".polar");
+            File file = new File(Main.config.maps.directoryPath().toFile(), mapName + ".polar");
 
             if (!file.exists()) {
                 sender.sendMessage(Component.text("Map ", NamedTextColor.RED)

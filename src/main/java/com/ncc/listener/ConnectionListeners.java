@@ -25,13 +25,14 @@ public final class ConnectionListeners {
         events.addListener(AsyncPlayerConfigurationEvent.class, event -> {
             Player player = event.getPlayer();
 
-            if (Main.INSTANCE.getPlayers().size() >= Main.MAX_PLAYERS) {
+            if (Main.INSTANCE.getPlayers().size() >= Main.config.match.maxPlayers) {
                 player.kick("Instance is full");
                 return;
             }
 
             event.setSpawningInstance(Main.INSTANCE);
             player.setGameMode(GameMode.ADVENTURE);
+            Main.operatorService.apply(player);
         });
 
         events.addListener(PlayerSpawnEvent.class, event -> {
@@ -44,6 +45,7 @@ public final class ConnectionListeners {
             player.teleport(pos);
             player.setRespawnPoint(pos);
             Main.gameManager.handleJoin(player);
+            Main.operatorService.applyAndRefreshCommands(player);
         });
 
         events.addListener(PlayerSkinInitEvent.class, event -> {
